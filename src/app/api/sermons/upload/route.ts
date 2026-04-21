@@ -39,14 +39,14 @@ export async function POST(request: NextRequest) {
     const filePath = `${churchId || user.id}/${Date.now()}.${fileExt}`;
 
     const { error: uploadError } = await admin.storage
-      .from('sermons')
+      .from('sermon-audio')
       .upload(filePath, file, { upsert: false });
 
     if (uploadError) {
       return NextResponse.json({ error: uploadError.message }, { status: 500 });
     }
 
-    const { data: publicUrlData } = admin.storage.from('sermons').getPublicUrl(filePath);
+    const { data: publicUrlData } = admin.storage.from('sermon-audio').getPublicUrl(filePath);
 
     // Create sermon record
     const { data: sermon, error: dbError } = await admin

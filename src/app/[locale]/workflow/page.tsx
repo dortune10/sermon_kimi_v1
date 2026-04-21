@@ -39,13 +39,16 @@ export default function WorkflowPage() {
         body: formData,
       });
 
-      if (!res.ok) throw new Error('Upload failed');
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Upload failed');
+      }
 
       toast.success(t('success'));
       router.push('/dashboard');
       router.refresh();
     } catch (err) {
-      toast.error(t('error'));
+      toast.error(err instanceof Error ? err.message : t('error'));
     } finally {
       setUploading(false);
     }
