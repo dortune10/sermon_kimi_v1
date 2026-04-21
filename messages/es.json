@@ -1,0 +1,57 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "sermons": "Sermones",
+    "workflow": "Subir",
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "profile": "Perfil"
+  },
+  "auth": {
+    "loginTitle": "Bienvenido de nuevo",
+    "loginSubtitle": "Inicia sesión en tu cuenta de SermonScriber",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes una cuenta?",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "createAccount": "Crear Cuenta",
+    "name": "Nombre completo"
+  },
+  "upload": {
+    "title": "Subir Sermón",
+    "subtitle": "Sube tu archivo de audio o video para comenzar",
+    "dropzone": "Arrastra y suelta tu archivo aquí, o haz clic para buscar",
+    "supportedFormats": "Formatos soportados: MP3, WAV, M4A, MP4, MOV",
+    "uploadButton": "Subir Sermón",
+    "uploading": "Subiendo...",
+    "success": "¡Sermón subido exitosamente!",
+    "error": "Error al subir. Por favor intenta de nuevo."
+  },
+  "sermon": {
+    "title": "Sermones",
+    "newSermon": "Nuevo Sermón",
+    "speaker": "Orador",
+    "date": "Fecha",
+    "duration": "Duración",
+    "status": "Estado",
+    "transcript": "Transcripción",
+    "scriptures": "Referencias Bíblicas",
+    "noTranscript": "Transcripción aún no disponible.",
+    "noScriptures": "No se detectaron referencias bíblicas aún.",
+    "pending": "Pendiente",
+    "processing": "Procesando",
+    "transcribed": "Transcrito",
+    "completed": "Completado",
+    "error": "Error"
+  },
+  "landing": {
+    "heroTitle": "Transforma Sermones en Contenido",
+    "heroSubtitle": "Transcripción y generación de contenido impulsada por IA para iglesias. Sube una vez, publica en todas partes.",
+    "getStarted": "Comenzar",
+    "learnMore": "Aprender Más"
+  }
+}

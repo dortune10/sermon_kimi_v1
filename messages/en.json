@@ -1,0 +1,57 @@
+{
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "sermons": "Sermons",
+    "workflow": "Upload",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "Profile"
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to your SermonScriber account",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "createAccount": "Create Account",
+    "name": "Full Name"
+  },
+  "upload": {
+    "title": "Upload Sermon",
+    "subtitle": "Upload your audio or video file to get started",
+    "dropzone": "Drag and drop your file here, or click to browse",
+    "supportedFormats": "Supported formats: MP3, WAV, M4A, MP4, MOV",
+    "uploadButton": "Upload Sermon",
+    "uploading": "Uploading...",
+    "success": "Sermon uploaded successfully!",
+    "error": "Upload failed. Please try again."
+  },
+  "sermon": {
+    "title": "Sermons",
+    "newSermon": "New Sermon",
+    "speaker": "Speaker",
+    "date": "Date",
+    "duration": "Duration",
+    "status": "Status",
+    "transcript": "Transcript",
+    "scriptures": "Scripture References",
+    "noTranscript": "Transcript not available yet.",
+    "noScriptures": "No scripture references detected yet.",
+    "pending": "Pending",
+    "processing": "Processing",
+    "transcribed": "Transcribed",
+    "completed": "Completed",
+    "error": "Error"
+  },
+  "landing": {
+    "heroTitle": "Transform Sermons into Content",
+    "heroSubtitle": "AI-powered transcription and content generation for churches. Upload once, publish everywhere.",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More"
+  }
+}
