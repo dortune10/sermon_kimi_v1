@@ -22,7 +22,14 @@ export async function middleware(request: NextRequest) {
   // Determine locale from path (e.g., /en/dashboard -> en)
   const pathLocale = pathname.split('/')[1];
   const isValidLocale = routing.locales.includes(pathLocale as 'en' | 'es');
-  const locale = isValidLocale ? pathLocale : routing.defaultLocale;
+
+  // Redirect paths without locale prefix to default locale
+  if (!isValidLocale) {
+    const url = new URL(`/${routing.defaultLocale}${pathname}`, request.url);
+    return NextResponse.redirect(url);
+  }
+
+  const locale = pathLocale;
 
   // Create a response object to attach cookies to
   let response = NextResponse.next({
