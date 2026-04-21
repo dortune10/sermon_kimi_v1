@@ -37,11 +37,17 @@ export default function WorkflowPage() {
       const res = await fetch('/api/sermons/upload', {
         method: 'POST',
         body: formData,
+        credentials: 'include',
       });
 
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = { error: `HTTP ${res.status}` };
+      }
       if (!res.ok) {
-        throw new Error(data.error || 'Upload failed');
+        throw new Error(data.error || `Upload failed (${res.status})`);
       }
 
       toast.success(t('success'));
