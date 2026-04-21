@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { createClient } from '@/lib/supabase-client';
 
 export default function WorkflowPage() {
   const t = useTranslations('upload');
@@ -16,6 +17,7 @@ export default function WorkflowPage() {
   const [title, setTitle] = useState('');
   const [speaker, setSpeaker] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const onDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -28,16 +30,39 @@ export default function WorkflowPage() {
     if (!file || !title) return;
 
     setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('title', title);
-      formData.append('speaker', speaker);
+    setProgress(0);
 
+    try {
+      const supabase = createClient();
+
+      // 1. Get current user to build the file path
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('You must be logged in to upload');
+      }
+
+      // 2. Upload file directly to Supabase Storage (bypasses Vercel 4.5MB limit)
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { error: storageError } = await supabase.storage
+        .from('sermon-audio')
+        .upload(filePath, file, { upsert: false });
+
+      if (storageError) {
+        throw new Error(storageError.message);
+      }
+
+      // 3. Create sermon record via API
       const res = await fetch('/api/sermons/upload', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
+        body: JSON.stringify({
+          title,
+          speaker,
+          filePath,
+        }),
       });
 
       let data;
@@ -46,6 +71,7 @@ export default function WorkflowPage() {
       } catch {
         data = { error: `HTTP ${res.status}` };
       }
+
       if (!res.ok) {
         throw new Error(data.error || `Upload failed (${res.status})`);
       }
@@ -57,6 +83,7 @@ export default function WorkflowPage() {
       toast.error(err instanceof Error ? err.message : t('error'));
     } finally {
       setUploading(false);
+      setProgress(0);
     }
   };
 
@@ -87,6 +114,13 @@ export default function WorkflowPage() {
               </p>
               <p className="text-xs text-muted-foreground mt-2">{t('supportedFormats')}</p>
             </div>
+
+            {uploading && (
+              <div className="w-full bg-muted rounded-full h-2 animate-pulse">
+                <div className="bg-primary h-2 rounded-full w-1/2" />
+                <p className="text-xs text-muted-foreground mt-1">Uploading...</p>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
