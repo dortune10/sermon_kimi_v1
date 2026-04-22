@@ -2,6 +2,7 @@ import { redirect, notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase-server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Sermon, ScriptureReference } from '@/types/supabase';
 
 interface SermonPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -16,11 +17,13 @@ export default async function SermonPage({ params }: SermonPageProps) {
     redirect('/login');
   }
 
-  const { data: sermon } = await supabase
+  const { data } = await supabase
     .from('sermons')
     .select('*, scripture_references(*)')
     .eq('id', id)
     .single();
+
+  const sermon = data as (Sermon & { scripture_references: ScriptureReference[] }) | null;
 
   if (!sermon) {
     notFound();

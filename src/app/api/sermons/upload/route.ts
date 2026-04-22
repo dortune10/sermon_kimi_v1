@@ -32,6 +32,10 @@ export async function POST(request: NextRequest) {
 
     const churchId = profile?.church_id;
 
+    if (!churchId) {
+      return NextResponse.json({ error: 'User is not assigned to a church' }, { status: 400 });
+    }
+
     // Get public URL for the uploaded file
     const { data: publicUrlData } = admin.storage.from('sermon-audio').getPublicUrl(filePath);
 

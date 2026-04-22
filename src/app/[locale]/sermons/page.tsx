@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase-server';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from '@/i18n/navigation';
+import { Sermon } from '@/types/supabase';
 
 export default async function SermonsPage() {
   const supabase = await createClient();
@@ -17,7 +18,7 @@ export default async function SermonsPage() {
     .select('id, title, speaker, date, status, language')
     .order('created_at', { ascending: false });
 
-  const sermons = data || [];
+  const sermons = (data as Sermon[] | null) || [];
 
   return (
     <div className="container py-8 px-4">
