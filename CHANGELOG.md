@@ -43,38 +43,41 @@ All notable changes to the SermonScriber v1 Serverless project.
 - **Upload Bucket Name** (`227d6e6`)
   - Fixed storage bucket reference from `sermons` → `sermon-audio`
   - Aligned with migration `001_initial_schema.sql`
-  - Improved frontend error handling to display actual server messages
 
 - **Upload Body Size Limit** (`548888e`)
   - Fixed 413 `Content Too Large` error on Vercel (4.5MB serverless limit)
   - Refactored upload flow:
     - **Before:** File uploaded through Vercel API route → Supabase Storage
-    - **After:** File uploaded directly from browser → Supabase Storage (100MB+ supported)
+    - **After:** File uploaded directly from browser → Supabase Storage (bypasses Vercel limit)
     - API route now receives only metadata (title, speaker, filePath)
-  - Added upload progress indicator UI
 
-### Database Schema
+- **RLS Infinite Recursion** (`002_fix_rls_recursion.sql`)
+  - Fixed `infinite recursion detected in policy for relation "profiles"`
+  - Root cause: `profiles` SELECT policy queried `profiles` inside itself
+  - Replaced recursive policy with simple `id = auth.uid()` check
+  - Simplified storage policies to avoid `profiles` subquery
 
-- **Initial Migration** (`001_initial_schema.sql`)
-  - Tables: `churches`, `profiles`, `sermons`, `scripture_references`, `content_assets`
-  - Row Level Security (RLS) enabled on all tables
-  - Role-based policies: `owner/admin/editor/member`
-  - Storage bucket `sermon-audio` with upload/read policies
-  - Trigger `on_auth_user_created` auto-creates profile on signup
-  - Performance indexes on common query patterns
+- **Supabase Type Compatibility** (`4769b6f`)
+  - Replaced custom `Database` interface with Supabase CLI-generated types
+  - Re-enabled `<Database>` generic on server and admin clients
+  - Added explicit type casts on dashboard/sermons/sermon detail pages
 
-### Type System
-
-- **Supabase Type Inference**
-  - Removed `<Database>` generic from `createServerClient()` and `createClient()`
-  - Resolves `never[]` return type on `supabase.from('sermons').select()`
-  - Added explicit `CookieOptions` type annotations for `setAll` callbacks
-
-- **Inngest Client**
-  - Removed invalid `new Inngest<Events>()` generic
-  - Updated to plain constructor for Inngest v3 compatibility
+- **Inngest Upload Failure** (`19eee20`)
+  - Made Inngest event sending non-blocking (try-catch)
+  - Upload now succeeds even when `INNGEST_EVENT_KEY` is not configured
+  - Prevents 401 `Event key not found` from failing the entire upload
 
 ### Added
+
+- **Client-Side Upload Validation**
+  - File size check before upload (50MB Supabase free tier limit)
+  - File size display in dropzone with color indicator (green/red)
+  - Helpful error message suggesting 128kbps MP3 compression
+
+- **Demo Data Seeded**
+  - English sermon: "The Good Shepherd - John 10" (status: `completed`, with transcript, summary, social post)
+  - Spanish sermon: "El Buen Pastor - Juan 10" (status: `transcribed`, with transcript, summary)
+  - Scripture references for both sermons (John 10, Psalm 23)
 
 - **Initial Scaffold** (`328805b`)
   - Next.js 15 + React 19 + TypeScript 5 + Tailwind CSS 3.4.17
@@ -92,13 +95,6 @@ All notable changes to the SermonScriber v1 Serverless project.
   - `.env.example` with all required environment variables
   - `supabase/config.toml` for local development
   - SSH config for GitHub (`~/.ssh/config`)
-
-### Added
-
-- **Demo Data Seeded**
-  - English sermon: "The Good Shepherd - John 10" (status: `completed`, with transcript, summary, social post)
-  - Spanish sermon: "El Buen Pastor - Juan 10" (status: `transcribed`, with transcript, summary)
-  - Scripture references for both sermons (John 10, Psalm 23)
 
 ### Known Issues
 
