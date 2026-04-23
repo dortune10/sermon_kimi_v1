@@ -12,6 +12,12 @@ All notable changes to the SermonScriber v1 Serverless project.
 - **Audio Player** — Inline HTML5 audio player on sermon detail page
 - **Sermon Search & Filtering** — Search by title/speaker, filter by status and language
 - **Church Onboarding Flow** — New users without a church are redirected to onboarding to create their church
+- **Playwright E2E Test Suite**
+  - `tests/e2e/auth.spec.ts` — login page, successful login, unauthenticated redirect
+  - `tests/e2e/navigation.spec.ts` — navbar links, Spanish locale page loading
+  - `tests/e2e/sermon.spec.ts` — sermons list, search/filter, sermon detail with content assets
+  - `tests/e2e/auth.setup.ts` — shared authenticated session for tests
+  - Run with: `npx playwright test` (10/10 passing)
 
 ### Fixed
 
@@ -21,22 +27,22 @@ All notable changes to the SermonScriber v1 Serverless project.
   - Before: Miami pastor uploading at 8pm EDT got stored as "tomorrow" because PostgreSQL `CURRENT_DATE` is UTC
   - After: Date reflects the user's local timezone, editable before submission
 
-### Fixed
-
 - **Spanish i18n Locale Loading**
   - Root cause: Custom auth middleware didn't use `createMiddleware` from `next-intl`, so `requestLocale` was always undefined
   - `getRequestConfig` fell back to default locale (`en`) for all requests
   - Fixed by integrating `createIntlMiddleware` from `next-intl` into existing auth middleware
   - Spanish pages (`/es/*`) now correctly load Spanish translations
 
-### Added
+- **Inngest Route Blocked by Vercel**
+  - Vercel's edge security returns 403 (`x-vercel-mitigated: deny`) on any path containing "inngest"
+  - Fixed by renaming serve endpoint from `/api/inngest` → `/api/jobs`
+  - Added `servePath: '/api/jobs'` to Inngest serve handler
 
-- **Playwright E2E Test Suite**
-  - `tests/e2e/auth.spec.ts` — login page, successful login, unauthenticated redirect
-  - `tests/e2e/navigation.spec.ts` — navbar links, Spanish locale page loading
-  - `tests/e2e/sermon.spec.ts` — sermons list, search/filter, sermon detail with content assets
-  - `tests/e2e/auth.setup.ts` — shared authenticated session for tests
-  - Run with: `npx playwright test`
+### Removed
+
+- Cleaned up 3 accidental test sermon records from production database
+
+---
 
 ## [0.2.0] - 2026-04-23
 
@@ -44,7 +50,6 @@ All notable changes to the SermonScriber v1 Serverless project.
 
 - **Inngest Cloud Sync Fixed**
   - Renamed `/api/inngest` → `/api/jobs` to bypass Vercel edge security blocking paths containing "inngest"
-  - Added `servePath: '/api/jobs'` to Inngest serve handler
   - Confirmed sync working: events received, functions invoked, runs tracked in Inngest Cloud dashboard
 
 - **Vercel Environment Variables**
@@ -62,12 +67,6 @@ All notable changes to the SermonScriber v1 Serverless project.
 - **Church Creation API**
   - `POST /api/churches/create` — admin-level endpoint creating church + linking user as owner atomically
   - Rollback on profile update failure
-
-### Fixed
-
-- **Inngest Route Blocked by Vercel**
-  - Vercel's edge security returns 403 (`x-vercel-mitigated: deny`) on any path containing "inngest"
-  - Fixed by renaming serve endpoint to `/api/jobs`
 
 ---
 

@@ -141,7 +141,8 @@ Live status of SermonScriber v2.1 features.
 - **Pages:** 8 (landing, login, dashboard, sermons, sermon detail, workflow, onboarding, 404)
 - **API Routes:** 3 (`/api/jobs`, `/api/sermons/upload`, `/api/churches/create`)
 - **Inngest Functions:** 2 (`transcribe-sermon`, `generate-content`)
+- **E2E Tests:** 10 (auth, navigation, sermon flows)
 - **Demo Sermons:** 2 (EN + ES)
 - **Test Users:** 1 (`demo@sermonscriber.com`)
-- **Commits:** 17
-- **Deployments:** 11
+- **Commits:** 21
+- **Deployments:** 20
