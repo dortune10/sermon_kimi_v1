@@ -21,6 +21,23 @@ All notable changes to the SermonScriber v1 Serverless project.
   - Before: Miami pastor uploading at 8pm EDT got stored as "tomorrow" because PostgreSQL `CURRENT_DATE` is UTC
   - After: Date reflects the user's local timezone, editable before submission
 
+### Fixed
+
+- **Spanish i18n Locale Loading**
+  - Root cause: Custom auth middleware didn't use `createMiddleware` from `next-intl`, so `requestLocale` was always undefined
+  - `getRequestConfig` fell back to default locale (`en`) for all requests
+  - Fixed by integrating `createIntlMiddleware` from `next-intl` into existing auth middleware
+  - Spanish pages (`/es/*`) now correctly load Spanish translations
+
+### Added
+
+- **Playwright E2E Test Suite**
+  - `tests/e2e/auth.spec.ts` — login page, successful login, unauthenticated redirect
+  - `tests/e2e/navigation.spec.ts` — navbar links, Spanish locale page loading
+  - `tests/e2e/sermon.spec.ts` — sermons list, search/filter, sermon detail with content assets
+  - `tests/e2e/auth.setup.ts` — shared authenticated session for tests
+  - Run with: `npx playwright test`
+
 ## [0.2.0] - 2026-04-23
 
 ### Infrastructure & DevOps

@@ -46,6 +46,8 @@ Live status of SermonScriber v2.1 features.
 | Sermon search & filtering | ✅ Done | Search title/speaker, filter by status & language |
 | Church onboarding | ✅ Done | Form to create church on first login if none exists |
 | Sermon date picker | ✅ Done | Client-side date input using user's local timezone |
+| Spanish i18n loading | ✅ Done | `createIntlMiddleware` integrated with auth middleware |
+| Playwright E2E tests | ✅ Done | Auth, navigation, sermon flows covered |
 
 ### AI / Background Jobs
 | Feature | Status | Notes |
