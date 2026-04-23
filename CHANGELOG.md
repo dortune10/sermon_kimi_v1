@@ -69,6 +69,14 @@ All notable changes to the SermonScriber v1 Serverless project.
 
 ### Added
 
+- **Gemini Transcription Pipeline** (`b743074`)
+  - `transcribeAudio()`: downloads audio → saves to temp file → uploads to Gemini Files API → polls until ACTIVE → generates transcript
+  - Inngest `transcribeSermon` function: updates status to `processing` → transcribes → saves transcript → detects scripture references → saves refs → triggers content generation
+  - Inngest `generateContent` function: generates summary, social posts, study guide → saves as `content_assets` → marks sermon `completed`
+  - Gracefully handles missing `GEMINI_API_KEY` (skips AI, saves placeholders)
+
+### Added
+
 - **Client-Side Upload Validation**
   - File size check before upload (50MB Supabase free tier limit)
   - File size display in dropzone with color indicator (green/red)

@@ -67,7 +67,7 @@ Live status of SermonScriber v1 features.
 ### Core Product
 | Priority | Feature | Effort | Notes |
 |----------|---------|--------|-------|
-| 🔴 High | Gemini transcription pipeline | 2-3 days | Upload audio → Gemini → save transcript |
+| 🔴 High | Gemini transcription pipeline | ✅ Done | Code deployed. Needs `GEMINI_API_KEY` to activate. |
 | 🔴 High | Content generation (AI) | 2-3 days | Summary, social posts, clips from transcript |
 | 🔴 High | Church onboarding flow | 1-2 days | Create church on first login if none exists |
 | 🟡 Medium | Scripture reference detection | 1-2 days | Parse transcript for Bible verses, normalize |
