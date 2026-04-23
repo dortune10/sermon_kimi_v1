@@ -46,7 +46,29 @@
     "processing": "Processing",
     "transcribed": "Transcribed",
     "completed": "Completed",
-    "error": "Error"
+    "error": "Error",
+    "summary": "Summary",
+    "socialPost": "Social Media Post",
+    "studyGuide": "Study Guide",
+    "generatedContent": "Generated Content",
+    "noContent": "No generated content yet. The AI is working on it!",
+    "audio": "Audio",
+    "listen": "Listen"
+  },
+  "onboarding": {
+    "title": "Welcome to SermonScriber",
+    "subtitle": "Let's set up your church to get started.",
+    "churchName": "Church Name",
+    "churchNamePlaceholder": "e.g., Grace Community Church",
+    "primaryLanguage": "Primary Language",
+    "secondaryLanguage": "Secondary Language",
+    "none": "None",
+    "timezone": "Timezone",
+    "createChurch": "Create Church",
+    "creating": "Creating...",
+    "success": "Church created successfully!",
+    "error": "Failed to create church. Please try again.",
+    "nameRequired": "Please enter a church name."
   },
   "landing": {
     "heroTitle": "Transform Sermons into Content",

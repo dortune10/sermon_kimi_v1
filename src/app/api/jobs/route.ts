@@ -5,6 +5,7 @@ import { transcribeSermon, generateContent } from '@/lib/inngest/functions';
 export const { GET, POST, PUT } = serve({
   client: inngest,
   functions: [transcribeSermon, generateContent],
+  servePath: '/api/jobs',
 });
 
 // Handle CORS preflight requests from Inngest dashboard

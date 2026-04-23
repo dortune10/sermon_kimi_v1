@@ -13,6 +13,18 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 
+  // Check if user has a church; if not, redirect to onboarding
+  const { data: profileRaw } = await supabase
+    .from('profiles')
+    .select('church_id')
+    .eq('id', user.id)
+    .single();
+  const profile = profileRaw as { church_id: string | null } | null;
+
+  if (!profile?.church_id) {
+    redirect('/onboarding');
+  }
+
   const { data } = await supabase
     .from('sermons')
     .select('id, title, speaker, date, status, language')

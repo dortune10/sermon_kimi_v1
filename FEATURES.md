@@ -1,6 +1,6 @@
 # Feature Tracker
 
-Live status of SermonScriber v1 features.
+Live status of SermonScriber v2.1 features.
 
 ---
 
@@ -15,6 +15,7 @@ Live status of SermonScriber v1 features.
 | Auth redirect (login ↔ dashboard) | ✅ Done | Based on session state |
 | Role-based access control | ✅ Done | `owner/admin/editor/member` |
 | Auto-create profile on signup | ✅ Done | Postgres trigger on `auth.users` |
+| Logout button | ✅ Done | In Navbar with Supabase signOut |
 
 ### Database & Storage
 | Feature | Status | Notes |
@@ -32,19 +33,36 @@ Live status of SermonScriber v1 features.
 | Locale-less redirect | ✅ Done | `/login` → `/en/login` |
 | Landing page | ✅ Done | Basic hero with login CTA |
 | Login page | ✅ Done | Email + password form |
-| Dashboard | ✅ Done | Recent sermons list |
-| Sermons list page | ✅ Done | All sermons with status badges |
-| Sermon detail page | ✅ Done | Transcript + scripture references |
-| Upload workflow page | ✅ Done | Drag-drop + metadata form |
-| shadcn/ui components | ✅ Done | Button, Card, Input, Badge, etc. |
-| Toast notifications | ✅ Done | Success/error feedback |
+| Dashboard | ✅ Done | Recent sermons list + church onboarding redirect |
+| Sermons list page | ✅ Done | All sermons with search & filter |
+| Sermon detail page | ✅ Done | Transcript + scripture refs + audio player + AI content assets |
+| Upload workflow page | ✅ Done | Drag-drop + metadata form + church check |
+| Navigation header | ✅ Done | Sticky navbar with Dashboard/Sermons/Upload + logout + language toggle |
+| shadcn/ui components | ✅ Done | Button, Card, Input, Badge, Select, Sonner, etc. |
+| Toast notifications | ✅ Done | Success/error feedback via Sonner |
+| Language toggle | ✅ Done | EN/ES switcher in navbar (desktop + mobile) |
+| Audio player | ✅ Done | Native HTML5 audio element on sermon detail |
+| Content assets display | ✅ Done | Summary, social posts, study guide grouped by type |
+| Sermon search & filtering | ✅ Done | Search title/speaker, filter by status & language |
+| Church onboarding | ✅ Done | Form to create church on first login if none exists |
+
+### AI / Background Jobs
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Gemini transcription | ✅ Done | Downloads audio, uploads to Gemini Files API, polls, transcribes |
+| Scripture reference detection | ✅ Done | Regex-based extraction from transcript |
+| Summary generation | ✅ Done | Via Gemini `generateSummary()` |
+| Social posts generation | ✅ Done | Via Gemini `generateSocialPosts()` |
+| Study guide generation | ✅ Done | Via Gemini `generateStudyGuide()` |
+| Content asset storage | ✅ Done | Saved to `content_assets` table by type |
+| Inngest Cloud sync | ✅ Done | Route at `/api/jobs`, events received, functions invoked |
 
 ### DevOps & Tooling
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Vercel deployment | ✅ Done | Auto-deploy from GitHub |
 | Supabase project linked | ✅ Done | `yijvmslbcsdqhbayjgqo` |
-| Environment variables | ✅ Done | 5 vars configured in Vercel |
+| Environment variables | ✅ Done | 6 vars configured in Vercel (including GEMINI) |
 | TypeScript build | ✅ Done | Passes `next build` |
 | Database migrations | ✅ Done | `001_initial_schema.sql`, `002_fix_rls_recursion.sql` |
 | Demo data seeded | ✅ Done | 2 sermons (EN + ES) with refs & assets |
@@ -55,10 +73,7 @@ Live status of SermonScriber v1 features.
 
 | Feature | Status | Blocker / Next Step |
 |---------|--------|---------------------|
-| Inngest event sending | 🚧 Stubbed | Event is sent but key is `local`. Pipeline not built yet. |
-| Spanish UI translations | 🚧 Partial | `messages/es.json` exists but not all keys translated |
-| Logout button | 🚧 Missing | No UI element to sign out |
-| Navigation header | 🚧 Missing | No nav between dashboard/sermons/upload/settings |
+| End-to-end transcription test | 🚧 Pending | Inngest sync works; needs real audio upload to verify full pipeline |
 
 ---
 
@@ -67,16 +82,11 @@ Live status of SermonScriber v1 features.
 ### Core Product
 | Priority | Feature | Effort | Notes |
 |----------|---------|--------|-------|
-| 🔴 High | Gemini transcription pipeline | ✅ Done | Code deployed. Needs `GEMINI_API_KEY` to activate. |
-| 🔴 High | Content generation (AI) | 2-3 days | Summary, social posts, clips from transcript |
-| 🔴 High | Church onboarding flow | 1-2 days | Create church on first login if none exists |
-| 🟡 Medium | Scripture reference detection | 1-2 days | Parse transcript for Bible verses, normalize |
 | 🟡 Medium | Scripture lookup (API.Bible) | 1-2 days | Fetch verse text for detected references |
-| 🟡 Medium | Sermon search & filtering | 1 day | By date, speaker, status, language |
 | 🟡 Medium | User management (invite members) | 2 days | Send invites, accept via email link |
-| 🟢 Low | Audio player on sermon detail | 1 day | Inline audio playback |
 | 🟢 Low | Edit sermon metadata | 0.5 day | Title, speaker, date, status |
 | 🟢 Low | Delete sermon | 0.5 day | With confirmation dialog |
+| 🟢 Low | Sermon clips / timestamps | 1-2 days | Extract short clips from transcript timestamps |
 
 ### Billing & Plans
 | Priority | Feature | Effort | Notes |
@@ -88,8 +98,6 @@ Live status of SermonScriber v1 features.
 ### Bilingual / International
 | Priority | Feature | Effort | Notes |
 |----------|---------|--------|-------|
-| 🔴 High | Spanish UI (full translation) | 1 day | Complete `messages/es.json` |
-| 🟡 Medium | Language toggle in UI | 0.5 day | Dropdown or link to switch locale |
 | 🟡 Medium | Auto-detect sermon language | 1-2 days | Gemini can detect language from audio |
 | 🟡 Medium | Transcript translation | 2-3 days | EN → ES or ES → EN via Gemini |
 | 🟢 Low | RTL language support | 2-3 days | Arabic, Hebrew (future) |
@@ -97,7 +105,6 @@ Live status of SermonScriber v1 features.
 ### Platform & Integrations
 | Priority | Feature | Effort | Notes |
 |----------|---------|--------|-------|
-| 🟡 Medium | Inngest Cloud setup | 1 day | Real event key, deploy functions |
 | 🟡 Medium | Social media publishing | 2-3 days | Auto-post to Twitter/X, Facebook, Instagram |
 | 🟡 Medium | Email notifications | 1-2 days | Transcription complete, weekly digest |
 | 🟢 Low | Podcast RSS feed | 1 day | Public feed of published sermons |
@@ -119,20 +126,19 @@ Live status of SermonScriber v1 features.
 | Issue | Impact | Workaround | Fix Planned |
 |-------|--------|------------|-------------|
 | 50MB file upload limit | High | Compress audio to 128kbps MP3 | Upgrade Supabase Pro |
-| Inngest not configured | Medium | Upload works, transcription doesn't | Set up Inngest Cloud |
-| No logout UI | Low | Close browser or clear cookies | Add logout button |
-| No navigation header | Low | Use browser back/forward | Add top nav |
 | Profile RLS only self-view | Low | Can't browse church directory | Add `SECURITY DEFINER` view |
+| No password reset flow | Medium | Manual admin reset only | Add forgot-password page |
 
 ---
 
-## 📊 Metrics (as of 2026-04-21)
+## 📊 Metrics (as of 2026-04-23)
 
 - **Tables:** 5
 - **Migrations:** 2
-- **Pages:** 6
-- **API Routes:** 2
+- **Pages:** 8 (landing, login, dashboard, sermons, sermon detail, workflow, onboarding, 404)
+- **API Routes:** 3 (`/api/jobs`, `/api/sermons/upload`, `/api/churches/create`)
+- **Inngest Functions:** 2 (`transcribe-sermon`, `generate-content`)
 - **Demo Sermons:** 2 (EN + ES)
 - **Test Users:** 1 (`demo@sermonscriber.com`)
-- **Commits:** 12
-- **Deployments:** 8
+- **Commits:** 17
+- **Deployments:** 11

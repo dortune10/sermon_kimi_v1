@@ -46,7 +46,29 @@
     "processing": "Procesando",
     "transcribed": "Transcrito",
     "completed": "Completado",
-    "error": "Error"
+    "error": "Error",
+    "summary": "Resumen",
+    "socialPost": "Publicación en Redes Sociales",
+    "studyGuide": "Guía de Estudio",
+    "generatedContent": "Contenido Generado",
+    "noContent": "Aún no hay contenido generado. ¡La IA está trabajando en ello!",
+    "audio": "Audio",
+    "listen": "Escuchar"
+  },
+  "onboarding": {
+    "title": "Bienvenido a SermonScriber",
+    "subtitle": "Configuremos tu iglesia para comenzar.",
+    "churchName": "Nombre de la Iglesia",
+    "churchNamePlaceholder": "ej., Iglesia Comunidad de Gracia",
+    "primaryLanguage": "Idioma Principal",
+    "secondaryLanguage": "Idioma Secundario",
+    "none": "Ninguno",
+    "timezone": "Zona Horaria",
+    "createChurch": "Crear Iglesia",
+    "creating": "Creando...",
+    "success": "¡Iglesia creada exitosamente!",
+    "error": "Error al crear la iglesia. Por favor intenta de nuevo.",
+    "nameRequired": "Por favor ingresa el nombre de la iglesia."
   },
   "landing": {
     "heroTitle": "Transforma Sermones en Contenido",

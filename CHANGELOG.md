@@ -4,6 +4,48 @@ All notable changes to the SermonScriber v1 Serverless project.
 
 ## [Unreleased]
 
+### Added
+
+- **Navigation Header** — Sticky navbar with Dashboard, Sermons, Upload links and logout button
+- **Content Assets Display** — Sermon detail page now shows AI-generated summary, social media posts, and study guide
+- **Language Toggle** — EN/ES switcher in navbar (desktop + mobile)
+- **Audio Player** — Inline HTML5 audio player on sermon detail page
+- **Sermon Search & Filtering** — Search by title/speaker, filter by status and language
+- **Church Onboarding Flow** — New users without a church are redirected to onboarding to create their church
+
+## [0.2.0] - 2026-04-23
+
+### Infrastructure & DevOps
+
+- **Inngest Cloud Sync Fixed**
+  - Renamed `/api/inngest` → `/api/jobs` to bypass Vercel edge security blocking paths containing "inngest"
+  - Added `servePath: '/api/jobs'` to Inngest serve handler
+  - Confirmed sync working: events received, functions invoked, runs tracked in Inngest Cloud dashboard
+
+- **Vercel Environment Variables**
+  - Added `GEMINI_API_KEY` for transcription pipeline
+  - Inngest keys updated from `local` dev stubs to real Cloud production keys
+
+### Added
+
+- **Gemini Transcription Pipeline** (end-to-end)
+  - `transcribeAudio()`: downloads audio → saves to temp file → uploads to Gemini Files API → polls until ACTIVE → generates transcript
+  - Inngest `transcribeSermon` function: updates status to `processing` → transcribes → saves transcript → detects scripture references → saves refs → triggers content generation
+  - Inngest `generateContent` function: generates summary, social posts, study guide → saves as `content_assets` → marks sermon `completed`
+  - Gracefully handles missing `GEMINI_API_KEY` (skips AI, saves placeholders)
+
+- **Church Creation API**
+  - `POST /api/churches/create` — admin-level endpoint creating church + linking user as owner atomically
+  - Rollback on profile update failure
+
+### Fixed
+
+- **Inngest Route Blocked by Vercel**
+  - Vercel's edge security returns 403 (`x-vercel-mitigated: deny`) on any path containing "inngest"
+  - Fixed by renaming serve endpoint to `/api/jobs`
+
+---
+
 ## [0.1.0] - 2026-04-21
 
 ### Infrastructure & DevOps
@@ -26,6 +68,7 @@ All notable changes to the SermonScriber v1 Serverless project.
     - `SUPABASE_SERVICE_ROLE_KEY`
     - `INNGEST_EVENT_KEY`
     - `INNGEST_SIGNING_KEY`
+    - `GEMINI_API_KEY`
 
 ### Security
 
@@ -69,14 +112,6 @@ All notable changes to the SermonScriber v1 Serverless project.
 
 ### Added
 
-- **Gemini Transcription Pipeline** (`b743074`)
-  - `transcribeAudio()`: downloads audio → saves to temp file → uploads to Gemini Files API → polls until ACTIVE → generates transcript
-  - Inngest `transcribeSermon` function: updates status to `processing` → transcribes → saves transcript → detects scripture references → saves refs → triggers content generation
-  - Inngest `generateContent` function: generates summary, social posts, study guide → saves as `content_assets` → marks sermon `completed`
-  - Gracefully handles missing `GEMINI_API_KEY` (skips AI, saves placeholders)
-
-### Added
-
 - **Client-Side Upload Validation**
   - File size check before upload (50MB Supabase free tier limit)
   - File size display in dropzone with color indicator (green/red)
@@ -103,13 +138,6 @@ All notable changes to the SermonScriber v1 Serverless project.
   - `.env.example` with all required environment variables
   - `supabase/config.toml` for local development
   - SSH config for GitHub (`~/.ssh/config`)
-
-### Known Issues
-
-- `GEMINI_API_KEY` not yet configured (transcription pipeline pending)
-- `INNGEST_EVENT_KEY` and `INNGEST_SIGNING_KEY` set to `local` (dev mode)
-- Supabase free tier 50MB file upload limit (client-side validation added)
-- No actual transcription/Inngest functions deployed yet
 
 ---
 

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,12 +12,32 @@ import { createClient } from '@/lib/supabase-client';
 
 export default function WorkflowPage() {
   const t = useTranslations('upload');
+  const locale = useLocale();
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState('');
   const [speaker, setSpeaker] = useState('');
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  // Redirect to onboarding if user has no church
+  useEffect(() => {
+    const checkChurch = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data: profileRaw } = await supabase
+        .from('profiles')
+        .select('church_id')
+        .eq('id', user.id)
+        .single();
+      const profile = profileRaw as { church_id: string | null } | null;
+      if (!profile?.church_id) {
+        router.push(`/${locale}/onboarding`);
+      }
+    };
+    checkChurch();
+  }, [router, locale]);
 
   const MAX_FILE_SIZE_MB = 50;
   const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
