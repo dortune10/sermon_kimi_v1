@@ -19,6 +19,15 @@ export default function WorkflowPage() {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  const MAX_FILE_SIZE_MB = 50;
+  const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  };
+
   const onDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     const dropped = e.dataTransfer.files[0];
@@ -28,6 +37,11 @@ export default function WorkflowPage() {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file || !title) return;
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      toast.error(`File too large (${formatFileSize(file.size)}). Maximum allowed is ${MAX_FILE_SIZE_MB}MB. Try compressing your audio file to 128kbps MP3.`);
+      return;
+    }
 
     setUploading(true);
     setProgress(0);
@@ -50,6 +64,9 @@ export default function WorkflowPage() {
         .upload(filePath, file, { upsert: false });
 
       if (storageError) {
+        if (storageError.message.includes('maximum allowed size') || storageError.message.includes('too large')) {
+          throw new Error(`File too large for storage. Maximum is ${MAX_FILE_SIZE_MB}MB. Compress your audio to 128kbps MP3 (typically 30-45MB for a 1-hour sermon).`);
+        }
         throw new Error(storageError.message);
       }
 
@@ -110,9 +127,17 @@ export default function WorkflowPage() {
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
               />
               <p className="text-muted-foreground">
-                {file ? file.name : t('dropzone')}
+                {file ? (
+                  <span>
+                    {file.name}
+                    <span className={`ml-2 text-xs ${file.size > MAX_FILE_SIZE_BYTES ? 'text-red-500 font-medium' : 'text-green-600'}`}>
+                      ({formatFileSize(file.size)})
+                      {file.size > MAX_FILE_SIZE_BYTES && ` — exceeds ${MAX_FILE_SIZE_MB}MB limit`}
+                    </span>
+                  </span>
+                ) : t('dropzone')}
               </p>
-              <p className="text-xs text-muted-foreground mt-2">{t('supportedFormats')}</p>
+              <p className="text-xs text-muted-foreground mt-2">{t('supportedFormats')} • Max {MAX_FILE_SIZE_MB}MB</p>
             </div>
 
             {uploading && (
