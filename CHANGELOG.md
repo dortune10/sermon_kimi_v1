@@ -93,12 +93,18 @@ All notable changes to the SermonScriber v1 Serverless project.
   - `supabase/config.toml` for local development
   - SSH config for GitHub (`~/.ssh/config`)
 
+### Added
+
+- **Demo Data Seeded**
+  - English sermon: "The Good Shepherd - John 10" (status: `completed`, with transcript, summary, social post)
+  - Spanish sermon: "El Buen Pastor - Juan 10" (status: `transcribed`, with transcript, summary)
+  - Scripture references for both sermons (John 10, Psalm 23)
+
 ### Known Issues
 
 - `GEMINI_API_KEY` not yet configured (transcription pipeline pending)
 - `INNGEST_EVENT_KEY` and `INNGEST_SIGNING_KEY` set to `local` (dev mode)
 - No actual transcription/Inngest functions deployed yet
-- Dashboard shows empty state until sermons are uploaded
 
 ---
 
