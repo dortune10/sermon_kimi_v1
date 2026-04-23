@@ -104,6 +104,7 @@ All notable changes to the SermonScriber v1 Serverless project.
 
 - `GEMINI_API_KEY` not yet configured (transcription pipeline pending)
 - `INNGEST_EVENT_KEY` and `INNGEST_SIGNING_KEY` set to `local` (dev mode)
+- Supabase free tier 50MB file upload limit (client-side validation added)
 - No actual transcription/Inngest functions deployed yet
 
 ---

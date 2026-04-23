@@ -57,16 +57,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: dbError?.message || 'Failed to create sermon' }, { status: 500 });
     }
 
-    // Send Inngest event
-    await inngest.send({
-      name: 'sermon.uploaded',
-      data: {
-        sermonId: sermon.id,
-        churchId: sermon.church_id || '',
-        audioUrl: sermon.audio_url || '',
-        language: 'en',
-      },
-    });
+    // Send Inngest event (non-blocking — transcription pipeline is optional for MVP)
+    try {
+      await inngest.send({
+        name: 'sermon.uploaded',
+        data: {
+          sermonId: sermon.id,
+          churchId: sermon.church_id || '',
+          audioUrl: sermon.audio_url || '',
+          language: 'en',
+        },
+      });
+    } catch {
+      // Inngest not configured yet — upload still succeeds
+    }
 
     return NextResponse.json({ id: sermon.id, status: 'pending' });
   } catch (err) {
