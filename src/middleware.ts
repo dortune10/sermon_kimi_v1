@@ -8,6 +8,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import createIntlMiddleware from 'next-intl/middleware';
 import { routing } from '@/i18n/routing';
 
 // Routes that require authentication
@@ -16,27 +17,24 @@ const PROTECTED_ROUTES = ['/dashboard', '/sermons', '/workflow', '/sermon'];
 // Auth routes that logged-in users should not access
 const AUTH_ROUTES = ['/login', '/signup'];
 
+const intlMiddleware = createIntlMiddleware(routing);
+
 export async function middleware(request: NextRequest) {
+  // Run next-intl middleware first (handles locale detection, redirects, etc.)
+  let response = await intlMiddleware(request);
+
   const { pathname } = request.nextUrl;
 
   // Determine locale from path (e.g., /en/dashboard -> en)
   const pathLocale = pathname.split('/')[1];
   const isValidLocale = routing.locales.includes(pathLocale as 'en' | 'es');
 
-  // Redirect paths without locale prefix to default locale
-  if (!isValidLocale) {
-    const url = new URL(`/${routing.defaultLocale}${pathname}`, request.url);
-    return NextResponse.redirect(url);
+  // If next-intl redirected (e.g., missing locale), return that response
+  if (response.status === 307 || response.status === 308) {
+    return response;
   }
 
-  const locale = pathLocale;
-
-  // Create a response object to attach cookies to
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
+  const locale = isValidLocale ? pathLocale : routing.defaultLocale;
 
   // Initialize Supabase client with cookie handling
   const supabase = createServerClient(
