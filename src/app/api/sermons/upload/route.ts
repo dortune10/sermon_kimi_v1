@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, speaker, filePath } = body;
+    const { title, speaker, filePath, date } = body;
 
     if (!title || !filePath) {
       return NextResponse.json({ error: 'Missing title or filePath' }, { status: 400 });
@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
         church_id: churchId,
         title,
         speaker: speaker || null,
+        date: date || new Date().toISOString().split('T')[0],
         status: 'pending',
         language: 'en',
         audio_url: publicUrlData.publicUrl,

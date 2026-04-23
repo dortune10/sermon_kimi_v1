@@ -13,6 +13,14 @@ All notable changes to the SermonScriber v1 Serverless project.
 - **Sermon Search & Filtering** — Search by title/speaker, filter by status and language
 - **Church Onboarding Flow** — New users without a church are redirected to onboarding to create their church
 
+### Fixed
+
+- **Sermon Date Timezone Bug**
+  - Upload form now includes a date picker defaulting to the user's **local date**
+  - API accepts `date` from client instead of relying on `CURRENT_DATE` (UTC)
+  - Before: Miami pastor uploading at 8pm EDT got stored as "tomorrow" because PostgreSQL `CURRENT_DATE` is UTC
+  - After: Date reflects the user's local timezone, editable before submission
+
 ## [0.2.0] - 2026-04-23
 
 ### Infrastructure & DevOps

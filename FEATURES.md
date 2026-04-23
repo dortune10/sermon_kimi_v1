@@ -45,6 +45,7 @@ Live status of SermonScriber v2.1 features.
 | Content assets display | ✅ Done | Summary, social posts, study guide grouped by type |
 | Sermon search & filtering | ✅ Done | Search title/speaker, filter by status & language |
 | Church onboarding | ✅ Done | Form to create church on first login if none exists |
+| Sermon date picker | ✅ Done | Client-side date input using user's local timezone |
 
 ### AI / Background Jobs
 | Feature | Status | Notes |

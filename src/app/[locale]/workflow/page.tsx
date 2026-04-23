@@ -17,6 +17,13 @@ export default function WorkflowPage() {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState('');
   const [speaker, setSpeaker] = useState('');
+  const [date, setDate] = useState(() => {
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = String(today.getMonth() + 1).padStart(2, '0');
+    const d = String(today.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  });
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -99,6 +106,7 @@ export default function WorkflowPage() {
           title,
           speaker,
           filePath,
+          date,
         }),
       });
 
@@ -175,6 +183,17 @@ export default function WorkflowPage() {
             <div className="space-y-2">
               <Label htmlFor="speaker">Speaker</Label>
               <Input id="speaker" value={speaker} onChange={(e) => setSpeaker(e.target.value)} />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="date">Date</Label>
+              <Input
+                id="date"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+              />
             </div>
 
             <Button type="submit" className="w-full" disabled={uploading || !file}>
